@@ -89,7 +89,7 @@ pip install pandas
 ### 1. Clone the Repository
 
 ```bash
-git clone <YOUR_GITHUB_REPOSITORY_URL>
+git clone (https://github.com/zainab1kausar338-babyseven/VLMod-3D-Obstacle-Tracker)
 cd vlmod
 ```
 
