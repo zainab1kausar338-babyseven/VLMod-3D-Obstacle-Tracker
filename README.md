@@ -374,7 +374,9 @@ If you use this project in academic or research work, you may cite it as:
 
 ## 📄 License
 
-Add the appropriate license for your project before publishing the repository.
+This project is released for academic and research purposes only.
+https://github.com/astudyber/MonoMulti-3DVG
+
 
 ---
 
