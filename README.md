@@ -1,99 +1,185 @@
+# VLMod-Obstacle-2026: Visual-Language Obstacle Matching
 
-# VLMod: Multi-Camera Spatial Obstacle Detection & Vector Tracking
+A practical implementation and evaluation workflow for the **VLMod-Obstacle-2026** track on the Visual Language Perception (VLP) platform.
 
-A lightweight, automated processing pipeline for **multi-camera spatial obstacle detection, frame-level vector extraction, and temporal track annotation** across distributed video streams.
-
-VLMod processes detection result files, filters inactive/background entries, analyzes detection statistics, and consolidates active detections into a structured CSV dataset suitable for downstream machine learning and computer vision workflows.
+The task focuses on matching **textual descriptions with objects in 3D scene data** and generating predictions in the required evaluation format.
 
 ---
 
-## 🔍 Features
+## 📌 Project Overview
 
-### Multi-View Parsing
+The VLMod-Obstacle-2026 task provides JSON files containing:
 
-Extracts timestamped obstacle trajectory information from detection files following the naming convention:
+* Textual descriptions of objects
+* 3D object information
+* Object position and spatial information
+* Object dimensions
+* Orientation
+* Color and category information
+
+The goal is to determine whether each object corresponds to each given textual description.
+
+For each test file, the required prediction contains **three binary values for each object**, representing whether the object matches the three descriptions.
+
+---
+
+## 🔍 What I Worked On
+
+I developed a Python-based workflow to process the evaluation data and prepare the required submission files.
+
+The workflow includes:
+
+1. Reading and parsing the JSON test files
+2. Extracting object and description information
+3. Applying a matching approach
+4. Generating prediction `.txt` files
+5. Checking and organizing the generated results
+6. Preparing the final submission ZIP file
+7. Evaluating different matching thresholds
+
+The workflow was applied to **300 test JSON files**, producing **4,220 lines of evaluation data**.
+
+---
+
+## 🧠 Matching and Threshold Experiment
+
+An important part of my work was testing how the matching threshold affected the evaluation results.
+
+I compared two experiments:
+
+| Experiment | Threshold | Precision | Recall | F1 Score |   TP |   FP |   FN |
+| ---------- | --------: | --------: | -----: | -------: | ---: | ---: | ---: |
+| Initial    |      0.66 |    31.12% | 52.66% |   39.12% | 1614 | 3573 | 1451 |
+| Strict     |      0.74 |    39.68% | 20.26% |   26.83% |  621 |  944 | 2444 |
+
+The stricter threshold reduced false positives and increased precision, but it also reduced recall and increased false negatives.
+
+This experiment helped me understand the practical trade-off between **precision and recall** rather than viewing the evaluation metrics only theoretically.
+
+---
+
+## 📊 Final Submission Result
+
+My submitted VLMod-Obstacle-2026 result was:
+
+* **F1 Score:** 26.8251
+* **Precision:** 39.6805
+* **Recall:** 20.2610
+* **True Positives:** 621
+* **False Positives:** 944
+* **False Negatives:** 2444
+
+The results were obtained from the VLP evaluation platform after submitting the generated predictions.
+
+---
+
+## ⚙️ Processing Pipeline
 
 ```text
-Dataset_Camera_Res_StartTS_EndTS_ObstacleID
+Test JSON Files
+       │
+       ▼
+JSON Parsing
+       │
+       ▼
+Extract Objects & Text Descriptions
+       │
+       ▼
+Matching / Similarity Calculation
+       │
+       ▼
+Apply Matching Threshold
+       │
+       ▼
+Generate Binary Predictions
+       │
+       ▼
+Create TXT Files
+       │
+       ▼
+Validate Output
+       │
+       ▼
+Create Submission ZIP
+       │
+       ▼
+VLP Evaluation
+       │
+       ▼
+Precision / Recall / F1
 ```
-
-### Automated Filtering
-
-Separates active obstacle detections from zero-padded/background entries.
-
-### Dataset Analytics
-
-Generates detection statistics, including:
-
-* Total detection files
-* Active detection files
-* Active frame detections
-* Detection counts by dataset
-* Detection density information
-
-### CSV Exporting
-
-Consolidates multiple processed `.txt` detection files into a single CSV file for use in:
-
-* PyTorch
-* TensorFlow
-* OpenCV
-* Pandas
-* Machine learning pipelines
-* Data visualization
 
 ---
 
 ## 📁 Repository Structure
 
 ```text
-vlmod/
+VLMod-3D-Obstacle-Tracker/
 │
-├── result/
-│   ├── active/
-│   │   └── # Processed active detection files
-│   │
-│   └── active_detections_summary.csv
-│       # Consolidated CSV dataset export
+├── README.md
 │
+├── main.py
+├── predict.py
+├── parser.py
+├── evaluation.py
+├── extract_zip.py
 ├── parse_stats.py
-│   # Dataset statistics and detection-count analysis
 │
-├── export_csv.py
-│   # Converts detection TXT files into a consolidated CSV
+├── combined_obstacles.csv
 │
-└── README.md
-    # Project documentation
+├── result.zip
+├── submission.zip
+└── submission_v2.zip
 ```
+
+### Python Files
+
+| File             | Purpose                         |
+| ---------------- | ------------------------------- |
+| `main.py`        | Main processing workflow        |
+| `predict.py`     | Prediction and matching process |
+| `parser.py`      | Parsing input data              |
+| `evaluation.py`  | Evaluation-related processing   |
+| `extract_zip.py` | Extraction and file handling    |
+| `parse_stats.py` | Dataset/statistical analysis    |
 
 ---
 
-## ⚙️ Requirements
+## 📦 Submission Files
 
-### Python
+The repository contains the generated submission archives used during experimentation:
 
-Python **3.8+** is recommended.
+* `submission.zip` — initial submission
+* `submission_v2.zip` — revised submission after changing the matching threshold
+* `result.zip` — processed result files
 
-### Python Dependencies
-
-Install the required dependency using:
-
-```bash
-pip install pandas
-```
+The two submissions allowed me to compare how different matching conditions affected the final evaluation metrics.
 
 ---
 
-## 🚀 Quick Start
+## 🛠️ Technologies
+
+* **Python**
+* **JSON**
+* **Pandas**
+* **CSV**
+* **ZIP file processing**
+* **Data preprocessing**
+* **Visual-language evaluation**
+* **3D spatial data**
+* **Computer Vision**
+* **Machine Learning evaluation**
+
+---
+
+## 🚀 Running the Workflow
 
 ### 1. Clone the Repository
 
 ```bash
-git clone (https://github.com/zainab1kausar338-babyseven/VLMod-3D-Obstacle-Tracker)
-cd vlmod
+git clone https://github.com/zainab1kausar338-babyseven/VLMod-3D-Obstacle-Tracker.git
+cd VLMod-3D-Obstacle-Tracker
 ```
-
----
 
 ### 2. Install Dependencies
 
@@ -101,282 +187,65 @@ cd vlmod
 pip install pandas
 ```
 
----
+Additional dependencies may be required depending on the individual script being executed.
 
-### 3. Analyze Detection Statistics
-
-Run:
+### 3. Run the Main Workflow
 
 ```bash
+python main.py
+```
+
+Other scripts can be executed individually when needed:
+
+```bash
+python predict.py
+python parser.py
+python evaluation.py
 python parse_stats.py
 ```
 
-The script analyzes the detection result files and reports active frame detections grouped by dataset.
-
 ---
 
-### 4. Create the Active Detection Directory
+## 📈 Key Observation
 
-On Windows PowerShell:
+The main observation from my experiments was that changing the matching threshold had a direct effect on the balance between precision and recall.
 
-```powershell
-New-Item -ItemType Directory -Path "D:\vlmod\result\active" -Force
-```
+A lower threshold allowed more potential matches to be detected, resulting in higher recall but also more false positives. Increasing the threshold made the matching condition stricter, reducing false positives while also causing more relevant cases to be missed.
 
----
-
-### 5. Move Active Detection Files
-
-The following PowerShell command identifies files containing non-zero detection entries and moves them into the `active` directory:
-
-```powershell
-Get-ChildItem -Path "D:\vlmod\result\*.txt" |
-Where-Object {
-    Select-String -Path $_.FullName -Pattern "[1-9]"
-} |
-Move-Item -Destination "D:\vlmod\result\active"
-```
-
-> **Note:** Make sure your result directory path matches your local project location before running the command.
-
----
-
-## 📊 Detection Data Format
-
-VLMod extracts metadata from the detection filenames and combines it with frame-level detection data.
-
-The exported file is:
-
-```text
-result/active_detections_summary.csv
-```
-
-### CSV Fields
-
-| Field         | Description                              | Example            |
-| ------------- | ---------------------------------------- | ------------------ |
-| `dataset_id`  | Unique identifier of the dataset capture | `145044`           |
-| `camera`      | Camera sensor identifier                 | `fa2sd4a06W152AIR` |
-| `resolution`  | Input frame vertical resolution          | `420`              |
-| `start_ts`    | Tracking epoch start timestamp           | `1626155724`       |
-| `end_ts`      | Tracking epoch end timestamp             | `1626155908`       |
-| `obstacle_id` | Assigned spatial tracking ID             | `243`              |
-| `frame_index` | Position of the frame inside the stream  | `1`                |
-| `data`        | Extracted coordinate/bounding vector     | `1 0 0`            |
-
----
-
-## 🔄 Processing Pipeline
-
-The overall processing workflow is:
-
-```text
-Raw Detection Files
-        │
-        ▼
-Filename / Metadata Parsing
-        │
-        ▼
-Frame-Level Detection Extraction
-        │
-        ▼
-Active vs. Empty Detection Filtering
-        │
-        ▼
-Dataset Statistics
-        │
-        ▼
-CSV Consolidation
-        │
-        ▼
-active_detections_summary.csv
-        │
-        ▼
-ML / Computer Vision Pipeline
-```
-
----
-
-## 🧹 Active Detection Filtering
-
-VLMod distinguishes between:
-
-### Empty / Background Entries
-
-Entries containing only zero-padded values, for example:
-
-```text
-0 0 0
-```
-
-These entries represent frames without an active obstacle detection.
-
-### Active Entries
-
-Entries containing non-zero values, for example:
-
-```text
-1 0 0
-```
-
-These records are retained as active detections for further analysis.
-
-This filtering reduces unnecessary background records and produces a more compact dataset for downstream processing.
-
----
-
-## 📈 Dataset Analytics
-
-`parse_stats.py` can be used to inspect detection activity across datasets.
-
-Example output concept:
-
-```text
-Dataset ID: 145044
-Active Files: 12
-Active Frame Detections: 1,284
-```
-
-The statistics can help identify:
-
-* Detection density
-* Dataset activity
-* Number of active obstacle tracks
-* Distribution of detections across datasets
-* Potentially sparse or inactive captures
-
----
-
-## 📤 CSV Export
-
-`export_csv.py` consolidates processed detection files into a single tabular dataset.
-
-Run:
-
-```bash
-python export_csv.py
-```
-
-The resulting file is:
-
-```text
-result/active_detections_summary.csv
-```
-
-This format makes the processed data easier to inspect, analyze, visualize, and integrate into machine learning workflows.
-
----
-
-## 🤖 Machine Learning Use
-
-The generated CSV can serve as an intermediate dataset for tasks such as:
-
-* Spatial obstacle detection
-* Object trajectory analysis
-* Multi-camera tracking
-* Temporal sequence analysis
-* Vector-based representation learning
-* Detection-density analysis
-* Computer vision experiments
-
-It can be loaded with Pandas:
-
-```python
-import pandas as pd
-
-df = pd.read_csv("result/active_detections_summary.csv")
-
-print(df.head())
-print(df.shape)
-```
-
----
-
-## 🧪 Example Data
-
-```text
-dataset_id,camera,resolution,start_ts,end_ts,obstacle_id,frame_index,data
-145044,fa2sd4a06W152AIR,420,1626155724,1626155908,243,1,"1 0 0"
-145044,fa2sd4a06W152AIR,420,1626155724,1626155908,243,2,"1 0 0"
-145044,fa2sd4a06W152AIR,420,1626155724,1626155908,243,3,"0 1 0"
-```
-
----
-
-## 💻 Technologies
-
-* **Python**
-* **Pandas**
-* **CSV**
-* **PowerShell**
-* **Computer Vision**
-* **Multi-Camera Data Processing**
-* **Spatial Tracking**
-* **Machine Learning Data Preparation**
+This experiment gave me practical experience with the relationship between **matching criteria, evaluation metrics, and system behavior**.
 
 ---
 
 ## 🎯 Project Objective
 
-The goal of VLMod is to provide a lightweight preprocessing layer between raw multi-camera detection outputs and downstream machine learning or computer vision systems.
+The objective of this project was not only to obtain an evaluation score, but also to understand the complete workflow of a visual-language evaluation task.
 
-Instead of manually inspecting large numbers of detection files, the pipeline automates:
+Through this work, I practiced:
 
-1. Detection file parsing
-2. Metadata extraction
-3. Active detection filtering
-4. Dataset-level statistics
-5. Frame-level organization
-6. CSV dataset generation
-
-This creates a structured representation of multi-camera spatial detection data that can be used for further experimentation and model development.
+* Understanding an unfamiliar dataset structure
+* Processing structured JSON data
+* Designing an automated processing workflow
+* Generating evaluation-compatible outputs
+* Running experiments with different parameters
+* Interpreting precision, recall, F1 score, TP, FP, and FN
+* Preparing a reproducible submission
 
 ---
 
 ## 📌 Current Status
 
-**Project stage:** Data processing and dataset preparation
+**Status:** Completed evaluation experiment
 
-Current components:
+The current repository contains the Python processing scripts, processed data, and submission files used during the VLMod-Obstacle-2026 task.
 
-* [x] Detection file parsing
-* [x] Metadata extraction
-* [x] Active detection filtering
-* [x] Dataset statistics
-* [x] CSV consolidation
-* [x] Training-ready tabular export
+Future work could include:
 
-Potential future extensions:
-
-* [ ] Automated trajectory visualization
-* [ ] Multi-camera trajectory synchronization
-* [ ] Vector normalization
-* [ ] Track continuity analysis
-* [ ] Visualization dashboard
-* [ ] PyTorch dataset loader
-* [ ] Automated model-training pipeline
-
----
-
-## 📜 Citation
-
-If you use this project in academic or research work, you may cite it as:
-
-```bibtex
-@article{vlmod2026,
-  title={VLMod: Multi-Camera Spatial Obstacle Detection and Vector Tracking},
-  author={VLMod Development Team},
-  year={2026}
-}
-```
-
----
-
-## 📄 License
-
-This project is released for academic and research purposes only.
-https://github.com/astudyber/MonoMulti-3DVG
-
+* Improving object-description matching
+* Testing additional similarity methods
+* Better spatial relationship modeling
+* Visualizing matching results
+* Experimenting with multimodal models
+* Improving precision and recall through better matching strategies
 
 ---
 
@@ -384,5 +253,10 @@ https://github.com/astudyber/MonoMulti-3DVG
 
 **Zainab Kausar**
 
-Computer Science Undergraduate
-Interests: Data Science, Machine Learning, Computer Vision, and Data Processing
+BS Computer Science Undergraduate
+Sarhad University of Science and Technology, Pakistan
+
+**Interests:** Data Science, Machine Learning, Computer Vision, Visual-Language Models, and Data Processing.
+
+
+
