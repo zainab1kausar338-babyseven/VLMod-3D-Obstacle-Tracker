@@ -1,25 +1,44 @@
 # VLMod-Obstacle-2026: Visual-Language Obstacle Matching
 
-A practical implementation and evaluation workflow for the **VLMod-Obstacle-2026** track on the Visual Language Perception (VLP) platform.
+A practical Python-based implementation and evaluation workflow for the **VLMod-Obstacle-2026** track on the Visual Language Perception (VLP) platform.
 
-The task focuses on matching **textual descriptions with objects in 3D scene data** and generating predictions in the required evaluation format.
+The project focuses on matching **textual descriptions with objects in 3D scene data**, generating evaluation-compatible predictions, and analyzing the effect of different matching thresholds on precision, recall, and F1 score.
 
 ---
 
 ## 📌 Project Overview
 
-The VLMod-Obstacle-2026 task provides JSON files containing:
+The VLMod-Obstacle-2026 task involves structured scene data containing information about objects and their corresponding textual descriptions.
 
-* Textual descriptions of objects
+The data includes information such as:
+
+* Textual object descriptions
 * 3D object information
 * Object position and spatial information
 * Object dimensions
 * Orientation
-* Color and category information
+* Color
+* Object category
 
-The goal is to determine whether each object corresponds to each given textual description.
+The objective is to determine whether each object corresponds to each given textual description.
 
-For each test file, the required prediction contains **three binary values for each object**, representing whether the object matches the three descriptions.
+For each test file, the prediction output contains **binary values indicating whether an object matches the provided descriptions**.
+
+---
+
+## 🎯 Project Objectives
+
+The main objectives of this project were to:
+
+1. Understand the structure of the VLMod obstacle dataset.
+2. Process structured JSON and CSV data.
+3. Extract object and description information programmatically.
+4. Develop an automated matching and prediction workflow.
+5. Generate evaluation-compatible `.txt` prediction files.
+6. Validate and organize generated outputs.
+7. Create submission ZIP files.
+8. Experiment with different matching thresholds.
+9. Analyze precision, recall, F1 score, TP, FP, and FN.
 
 ---
 
@@ -29,47 +48,17 @@ I developed a Python-based workflow to process the evaluation data and prepare t
 
 The workflow includes:
 
-1. Reading and parsing the JSON test files
+1. Reading and parsing JSON test files
 2. Extracting object and description information
-3. Applying a matching approach
-4. Generating prediction `.txt` files
-5. Checking and organizing the generated results
-6. Preparing the final submission ZIP file
-7. Evaluating different matching thresholds
+3. Processing available spatial and object attributes
+4. Applying an object-description matching approach
+5. Generating binary predictions
+6. Creating prediction `.txt` files
+7. Checking and organizing generated results
+8. Preparing submission ZIP files
+9. Evaluating different matching thresholds
 
-The workflow was applied to **300 test JSON files**, producing **4,220 lines of evaluation data**.
-
----
-
-## 🧠 Matching and Threshold Experiment
-
-An important part of my work was testing how the matching threshold affected the evaluation results.
-
-I compared two experiments:
-
-| Experiment | Threshold | Precision | Recall | F1 Score |   TP |   FP |   FN |
-| ---------- | --------: | --------: | -----: | -------: | ---: | ---: | ---: |
-| Initial    |      0.66 |    31.12% | 52.66% |   39.12% | 1614 | 3573 | 1451 |
-| Strict     |      0.74 |    39.68% | 20.26% |   26.83% |  621 |  944 | 2444 |
-
-The stricter threshold reduced false positives and increased precision, but it also reduced recall and increased false negatives.
-
-This experiment helped me understand the practical trade-off between **precision and recall** rather than viewing the evaluation metrics only theoretically.
-
----
-
-## 📊 Final Submission Result
-
-My submitted VLMod-Obstacle-2026 result was:
-
-* **F1 Score:** 26.8251
-* **Precision:** 39.6805
-* **Recall:** 20.2610
-* **True Positives:** 621
-* **False Positives:** 944
-* **False Negatives:** 2444
-
-The results were obtained from the VLP evaluation platform after submitting the generated predictions.
+The workflow was applied to **300 test JSON files**, producing approximately **4,220 lines of evaluation data**.
 
 ---
 
@@ -85,7 +74,10 @@ JSON Parsing
 Extract Objects & Text Descriptions
        │
        ▼
-Matching / Similarity Calculation
+Object-Description Matching
+       │
+       ▼
+Similarity / Matching Calculation
        │
        ▼
 Apply Matching Threshold
@@ -111,63 +103,162 @@ Precision / Recall / F1
 
 ---
 
+## 🧠 Matching and Threshold Experiment
+
+A major part of the project was experimenting with the **matching threshold** used to determine whether an object and textual description should be considered a match.
+
+Two experiments were compared:
+
+| Experiment | Threshold | Precision | Recall | F1 Score |    TP |    FP |    FN |
+| ---------- | --------: | --------: | -----: | -------: | ----: | ----: | ----: |
+| Initial    |      0.66 |    31.12% | 52.66% |   39.12% | 1,614 | 3,573 | 1,451 |
+| Strict     |      0.74 |    39.68% | 20.26% |   26.83% |   621 |   944 | 2,444 |
+
+The stricter threshold produced **higher precision and fewer false positives**, while recall decreased and false negatives increased.
+
+This experiment provided practical experience with the relationship between **matching thresholds, precision, recall, and system behavior**.
+
+---
+
+## 📊 Final Submission Result
+
+The final submitted result on the VLP evaluation platform was:
+
+| Metric          |      Result |
+| --------------- | ----------: |
+| F1 Score        | **26.8251** |
+| Precision       | **39.6805** |
+| Recall          | **20.2610** |
+| True Positives  |     **621** |
+| False Positives |     **944** |
+| False Negatives |   **2,444** |
+
+These values were obtained from the VLP evaluation platform after submitting the generated prediction files.
+
+---
+
+## 📈 Evaluation Metrics
+
+### Precision
+
+Measures the proportion of predicted matches that were correct.
+
+```text
+Precision = TP / (TP + FP)
+```
+
+### Recall
+
+Measures the proportion of relevant matches that were successfully identified.
+
+```text
+Recall = TP / (TP + FN)
+```
+
+### F1 Score
+
+Combines precision and recall into a single metric.
+
+```text
+F1 = 2 × (Precision × Recall) / (Precision + Recall)
+```
+
+These metrics were used to understand how changes to the matching threshold affected the prediction results.
+
+---
+
 ## 📁 Repository Structure
+
+The repository is organized into source code, processed data, and experiment outputs.
 
 ```text
 VLMod-3D-Obstacle-Tracker/
 │
 ├── README.md
 │
-├── main.py
-├── predict.py
-├── parser.py
-├── evaluation.py
-├── extract_zip.py
-├── parse_stats.py
-│
 ├── combined_obstacles.csv
 │
-├── result.zip
-├── submission.zip
-└── submission_v2.zip
+├── src/
+│   ├── main.py
+│   ├── predict.py
+│   ├── parser.py
+│   ├── evaluation.py
+│   ├── extract_zip.py
+│   └── parse_stats.py
+│
+└── zip/
+    ├── submission.zip
+    ├── submission_v2.zip
+    └── result.zip
 ```
 
-### Python Files
+### `src/`
 
-| File             | Purpose                         |
-| ---------------- | ------------------------------- |
-| `main.py`        | Main processing workflow        |
-| `predict.py`     | Prediction and matching process |
-| `parser.py`      | Parsing input data              |
-| `evaluation.py`  | Evaluation-related processing   |
-| `extract_zip.py` | Extraction and file handling    |
-| `parse_stats.py` | Dataset/statistical analysis    |
+Contains the Python source code used for dataset processing, prediction, matching, evaluation, and statistical analysis.
+
+| File             | Purpose                                    |
+| ---------------- | ------------------------------------------ |
+| `main.py`        | Main processing workflow                   |
+| `predict.py`     | Prediction and object-description matching |
+| `parser.py`      | Input data parsing                         |
+| `evaluation.py`  | Evaluation and metric processing           |
+| `extract_zip.py` | ZIP extraction and file handling           |
+| `parse_stats.py` | Dataset statistics and analysis            |
+
+### `zip/`
+
+Contains the generated archives used during the experiments and evaluation.
+
+| File                | Description                                                        |
+| ------------------- | ------------------------------------------------------------------ |
+| `submission.zip`    | Initial submission archive                                         |
+| `submission_v2.zip` | Revised submission generated after changing the matching threshold |
+| `result.zip`        | Processed result files                                             |
+
+### `combined_obstacles.csv`
+
+Contains combined processed obstacle information used during the project.
 
 ---
 
 ## 📦 Submission Files
 
-The repository contains the generated submission archives used during experimentation:
+The experiment generated multiple archives during the evaluation process.
 
-* `submission.zip` — initial submission
-* `submission_v2.zip` — revised submission after changing the matching threshold
-* `result.zip` — processed result files
+### `submission.zip`
 
-The two submissions allowed me to compare how different matching conditions affected the final evaluation metrics.
+The initial submission containing the generated prediction files.
+
+### `submission_v2.zip`
+
+A revised submission generated after modifying the matching threshold.
+
+### `result.zip`
+
+Contains processed result files generated during the workflow.
+
+All three archives are stored in the:
+
+```text
+zip/
+```
+
+directory.
 
 ---
 
 ## 🛠️ Technologies
 
 * **Python**
-* **JSON**
 * **Pandas**
+* **JSON**
 * **CSV**
 * **ZIP file processing**
 * **Data preprocessing**
-* **Visual-language evaluation**
+* **Data analysis**
 * **3D spatial data**
 * **Computer Vision**
+* **Visual-Language evaluation**
 * **Machine Learning evaluation**
 
 ---
@@ -181,71 +272,114 @@ git clone https://github.com/zainab1kausar338-babyseven/VLMod-3D-Obstacle-Tracke
 cd VLMod-3D-Obstacle-Tracker
 ```
 
-### 2. Install Dependencies
+### 2. Navigate to the Source Folder
+
+```bash
+cd src
+```
+
+### 3. Install Dependencies
+
+The primary dependency used in the processing workflow is:
 
 ```bash
 pip install pandas
 ```
 
-Additional dependencies may be required depending on the individual script being executed.
+Additional dependencies may be required depending on the individual script and dataset configuration.
 
-### 3. Run the Main Workflow
+### 4. Run the Main Workflow
 
 ```bash
 python main.py
 ```
 
-Other scripts can be executed individually when needed:
+Individual components can also be executed when required:
 
 ```bash
-python predict.py
 python parser.py
+python predict.py
 python evaluation.py
 python parse_stats.py
 ```
 
 ---
 
-## 📈 Key Observation
+## 🧪 Experiments
 
-The main observation from my experiments was that changing the matching threshold had a direct effect on the balance between precision and recall.
+The project involved several stages of experimentation, including:
 
-A lower threshold allowed more potential matches to be detected, resulting in higher recall but also more false positives. Increasing the threshold made the matching condition stricter, reducing false positives while also causing more relevant cases to be missed.
+* Dataset structure analysis
+* JSON parsing
+* Object extraction
+* Description processing
+* Data preprocessing
+* Object-description matching
+* Matching threshold adjustment
+* Prediction generation
+* Evaluation metric analysis
+* Submission generation
 
-This experiment gave me practical experience with the relationship between **matching criteria, evaluation metrics, and system behavior**.
+The threshold experiment was particularly useful for understanding how stricter matching criteria affect false positives, false negatives, precision, and recall.
 
 ---
 
-## 🎯 Project Objective
+## 📚 What I Learned
 
-The objective of this project was not only to obtain an evaluation score, but also to understand the complete workflow of a visual-language evaluation task.
+Through this project, I gained practical experience in:
 
-Through this work, I practiced:
-
-* Understanding an unfamiliar dataset structure
-* Processing structured JSON data
-* Designing an automated processing workflow
+* Working with an unfamiliar research dataset
+* Understanding structured JSON and CSV data
+* Building Python data-processing workflows
+* Processing 3D spatial object information
+* Working with visual-language evaluation data
+* Designing automated prediction pipelines
 * Generating evaluation-compatible outputs
-* Running experiments with different parameters
-* Interpreting precision, recall, F1 score, TP, FP, and FN
-* Preparing a reproducible submission
+* Performing parameter-based experiments
+* Interpreting precision, recall, and F1 score
+* Understanding TP, FP, and FN
+* Preparing reproducible submission files
+* Analyzing how matching criteria influence system behavior
 
 ---
 
-## 📌 Current Status
+## 🔮 Future Improvements
 
-**Status:** Completed evaluation experiment
+Potential future improvements include:
 
-The current repository contains the Python processing scripts, processed data, and submission files used during the VLMod-Obstacle-2026 task.
+* More advanced object-description matching
+* Additional similarity methods
+* Improved spatial relationship modeling
+* Better temporal information handling
+* Visualization of object and matching results
+* Improved object-category and attribute matching
+* Multimodal model integration
+* Automated evaluation reports
+* Further experimentation with matching strategies
 
-Future work could include:
+---
 
-* Improving object-description matching
-* Testing additional similarity methods
-* Better spatial relationship modeling
-* Visualizing matching results
-* Experimenting with multimodal models
-* Improving precision and recall through better matching strategies
+## 📌 Project Status
+
+**Status: Completed evaluation experiment**
+
+The repository contains the Python processing scripts, processed obstacle data, and experimental submission archives used during the **VLMod-Obstacle-2026** task.
+
+The project represents a practical exploration of:
+
+```text
+3D Spatial Data
+       ↓
+Data Parsing
+       ↓
+Object-Description Matching
+       ↓
+Prediction Generation
+       ↓
+Evaluation
+       ↓
+Submission
+```
 
 ---
 
@@ -256,7 +390,25 @@ Future work could include:
 BS Computer Science Undergraduate
 Sarhad University of Science and Technology, Pakistan
 
-**Interests:** Data Science, Machine Learning, Computer Vision, Visual-Language Models, and Data Processing.
+### Interests
 
+* Data Science
+* Machine Learning
+* Computer Vision
+* Visual-Language Models
+* Data Processing
+* Database Systems
 
+### GitHub
 
+https://github.com/zainab1kausar338-babyseven
+
+---
+
+## ⭐ Project Focus
+
+This project demonstrates practical experience in taking a research-oriented dataset through a complete processing and evaluation workflow:
+
+**Raw Data → Parsing → Matching → Prediction → Evaluation → Submission**
+
+It combines **Python programming, structured data processing, 3D spatial information, object-description matching, and evaluation analysis** in a single practical project.
